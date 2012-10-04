@@ -1,0 +1,97 @@
+<html>
+<head>
+  <meta charset="UTF-8" />
+  
+  <title>Joystick Demo</title>
+
+  <style type="text/css">
+    body {
+      background: #ffffff;
+      font-size: 11pt;
+      font-family: "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Tahoma, sans-serif;
+      margin:20px;
+      min-height: 1000px;
+    }
+
+    #joystick-one {
+      background: #000000;
+      opacity: 0.2;
+      position:absolute; 
+      top:50px; 
+      left:50px;
+    }
+
+    #joystick-two {
+      background: #000000;
+      border-radius:10px;
+      position:absolute; 
+      top:760px; 
+      left:100px;
+    }
+
+    #joystick-three {
+      background: #000000;
+      border-radius:10px;
+      position:absolute; 
+      top: 800px; 
+      left: 50px;
+    }
+
+  </style>
+
+</head>
+<body>
+
+  <div style="background:url(maze.gif); width:940px; height:590px; position: absolute; top:50px; left:50px;">
+    <!-- http://hereandabove.com/maze/mazeorig.form.html -->
+  </div>
+  <div id="joystick-one-sim-circ" style="width:15px; height:15px; background-color:#45E678; position:absolute; border-radius:5px;"></div>
+  <div id="value" style="position:absolute; top:820px; left:120px; border:2px solid #f0f0f0; font-size:8em; padding:10px;">x0 y0</div>
+
+  <div id="joystick-one"></div>
+  <div id="joystick-two"></div>
+  <div id="joystick-three"></div>
+
+
+  <script src="jquery.js" type="text/javascript" charset="utf-8"></script>
+  <script src="raphael.js" type="text/javascript" charset="utf-8"></script>
+  <script src="joystick.jquery.js" type="text/javascript" charset="utf-8"></script>
+
+  <script type="text/javascript">
+
+  $(function() {
+
+    $('#joystick-two').joystick({"width":400, "height":30, "axis":"x"}, function(x, y){ $("#value").text("x" + Math.round(x) + " y" + y); });
+    $('#joystick-three').joystick({"width":30, "height":200, "axis":"y"}, function(x, y){ $("#value").text("x" + x + " y" + Math.round(y)); });      
+
+    $('#joystick-one').joystick({"width":950, "height":600, "pathColor":"#45E678", "virtualPositionEasing":"linear", "virtualPositionMaxValue":10}, positionCallback);
+    function positionCallback(x, y){
+      _x = x;
+      _y = y;
+    }    
+
+    // simulator
+    var $simCirc = $("#joystick-one-sim-circ");
+    var simCircPos = {"x":56, "y":163};
+
+    var _x = 0;
+    var _y = 0;
+
+    setInterval(function(){
+      simCircPos.x += _x;
+      simCircPos.y += _y;
+
+      simCircPos.x = simCircPos.x > $(window).width() ? 0 : simCircPos.x;
+      simCircPos.x = simCircPos.x < 0 ? $(window).width() : simCircPos.x;
+
+      simCircPos.y = simCircPos.y > $(window).height() ? 0 : simCircPos.y;
+      simCircPos.y = simCircPos.y < 0 ? $(window).height() : simCircPos.y;
+
+      $simCirc.css({"left":simCircPos.x, "top":simCircPos.y});
+    }, 1000/60); // fps
+
+  });
+
+  </script>
+</body>
+</html>
